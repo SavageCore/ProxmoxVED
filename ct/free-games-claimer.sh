@@ -21,7 +21,6 @@ catch_errors
 
 function update_script() {
   header_info
-
   check_container_storage
   check_container_resources
 
@@ -30,22 +29,32 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
-  fetch_and_deploy_gh_release "free-games-claimer" "vogler/free-games-claimer" "tarball"
-  $STD npm install
+  if check_for_gh_release "free-games-claimer" "vogler/free-games-claimer"; then
+    msg_info "Stopping Services"
+    systemctl stop free-games-claimer
+    systemctl stop free-games-claimer-vnc
+    msg_ok "Stopped Services"
 
-  PATCHRIGHT_VERSION=$(npm list patchright | grep patchright@ | awk -F@ '{print $2}' | tr -d ' ')
-  REQUIRED_VERSION="1.55.0"
-  if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$PATCHRIGHT_VERSION" | sort -V | head -n1)" != "$REQUIRED_VERSION" ]; then
-    msg_info "Updating patchright to version ${REQUIRED_VERSION} or higher"
-    $STD npm install patchright@latest
-    msg_ok "Updated patchright to version $(npm list patchright | grep patchright@ | awk -F@ '{print $2}' | tr -d ' ')"
-  else
-    msg_ok "patchright version ${PATCHRIGHT_VERSION} meets the requirement"
+    msg_info "Backing up Data"
+    cp -r /opt/free-games-claimer/data /opt/free-games-claimer_data_backup
+    msg_ok "Backed up Data"
+
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "free-games-claimer" "vogler/free-games-claimer" "tarball"
+
+    cd /opt/free-games-claimer || exit
+    $STD npm install
+    $STD npx patchright install chromium --no-shell
+
+    msg_info "Restoring Data"
+    cp -r /opt/free-games-claimer_data_backup/. /opt/free-games-claimer/data
+    rm -rf /opt/free-games-claimer_data_backup
+    msg_ok "Restored Data"
+
+    msg_info "Starting Services"
+    systemctl start free-games-claimer-vnc
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
   fi
-
-  msg_ok "Updated ${APP}"
-
   exit
 }
 
