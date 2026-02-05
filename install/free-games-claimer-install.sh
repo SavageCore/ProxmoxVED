@@ -131,7 +131,7 @@ After=syslog.target network.target free-games-claimer-vnc
 Requires=free-games-claimer-vnc
 
 [Service]
-Type=simple
+Type=oneshot
 Environment=DISPLAY=:1
 Environment=SHOW=1
 Environment=WIDTH=1920
@@ -147,18 +147,26 @@ StandardOutput=journal
 WorkingDirectory=/opt/free-games-claimer
 User=root
 Group=root
+EOF
+
+msg_ok "Created Services"
+
+timer_path="/etc/systemd/system/free-games-claimer.timer"
+cat <<'EOF' >"$timer_path"
+[Unit]
+Description=Run free-games-claimer daily
+
+[Timer]
+OnCalendar=*-*-* 18:30:00
+Persistent=true
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=timers.target
 EOF
 
 systemctl daemon-reload
-systemctl enable -q free-games-claimer
-msg_ok "Created Services"
-
-msg_info "Creating Cron Job"
-echo "30 18 * * * root systemctl start free-games-claimer" >>/etc/crontab
-msg_ok "Created Cron Job (daily at 18:30)"
+systemctl enable -q --now free-games-claimer.timer
+msg_ok "Created Service & Timer (daily at 18:30)"
 
 motd_ssh
 customize
