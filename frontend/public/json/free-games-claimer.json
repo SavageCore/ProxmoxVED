@@ -31,5 +31,18 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "After install, configure your credentials by editing the config file located at: `/opt/free-games-claimer/data/config.env`",
+      "type": "info"
+    },
+    {
+      "text": "The script will run daily at 18:30 but you can also run it manually by executing: `systemctl start free-games-claimer`",
+      "type": "info"
+    },
+    {
+      "text": "When running you can access the VNC console at: http://[IP_ADDRESS]:6080",
+      "type": "info"
+    }
+  ]
 }

@@ -52,19 +52,18 @@ $STD uv python update-shell
 $STD uv pip install apprise --system
 msg_ok "Installed Dependencies"
 
-msg_info "Installing free-games-claimer"
 fetch_and_deploy_gh_release "free-games-claimer" "vogler/free-games-claimer" "tarball"
-msg_ok "Installed free-games-claimer"
-msg_info "Installing NPM Packages"
+msg_info "Installing free-games-claimer"
 $STD npm install
 $STD npx patchright install chromium --no-shell
-msg_ok "Installed NPM Packages"
+msg_ok "Installed free-games-claimer"
 
 # Install noVNC after patchright to avoid conflicts
-msg_info "Install noVNC"
 install_packages_with_retry "novnc"
 msg_ok "Installed noVNC"
 $STD ln -s /usr/share/novnc/vnc_auto.html /usr/share/novnc/index.html
+
+msg_info "Creating Service"
 
 mkdir -p /opt/free-games-claimer/data
 cat <<EOF >/opt/free-games-claimer/data/config.env
@@ -98,9 +97,6 @@ PG_CLAIMDLC=0
 NOTIFY=
 EOF
 
-msg_ok "Installed free-games-claimer"
-
-msg_info "Creating Services"
 vnc_service_path="/etc/systemd/system/free-games-claimer-vnc"
 cat <<EOF >"$vnc_service_path"
 [Unit]
