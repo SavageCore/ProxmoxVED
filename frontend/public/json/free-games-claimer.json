@@ -12,7 +12,7 @@
   "interface_port": 6080,
   "documentation": "https://github.com/vogler/free-games-claimer",
   "website": "https://github.com/vogler/free-games-claimer",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/free-games-claimer.png",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/free-games-claimer.webp",
   "config_path": "/opt/free-games-claimer/data/config.env",
   "description": "Automatically claims free games and DLCs on the Epic Games Store, Amazon Prime Gaming and GOG.",
   "install_methods": [
