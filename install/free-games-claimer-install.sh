@@ -97,8 +97,7 @@ PG_CLAIMDLC=0
 NOTIFY=
 EOF
 
-vnc_service_path="/etc/systemd/system/free-games-claimer-vnc"
-cat <<EOF >"$vnc_service_path"
+cat <<EOF >/etc/systemd/system/free-games-claimer-vnc
 [Unit]
 Description=free-games-claimer VNC Display Server
 Before=free-games-claimer
@@ -118,8 +117,7 @@ EOF
 
 systemctl enable -q --now free-games-claimer-vnc
 
-service_path="/etc/systemd/system/free-games-claimer"
-cat <<EOF >"$service_path"
+cat <<EOF >/etc/systemd/system/free-games-claimer
 [Unit]
 Description=free-games-claimer
 After=syslog.target network.target free-games-claimer-vnc
