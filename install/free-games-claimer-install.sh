@@ -116,7 +116,6 @@ ExecStop=/usr/bin/pkill -f websockify
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
 systemctl enable -q --now free-games-claimer-vnc
 
 service_path="/etc/systemd/system/free-games-claimer"
@@ -160,7 +159,6 @@ Persistent=true
 WantedBy=timers.target
 EOF
 
-systemctl daemon-reload
 systemctl enable -q --now free-games-claimer.timer
 msg_ok "Created Service & Timer (daily at 18:30)"
 
